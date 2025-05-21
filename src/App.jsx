@@ -30,9 +30,21 @@ function App() {
 
   // Add to cart function
   const addToCart = (product) => {
+    // Check if product has stock
+    if (!product.stock || product.stock <= 0) {
+      alert("Sorry, this product is out of stock")
+      return
+    }
+
     const existingProduct = cart.find((item) => item.id === product.id)
 
     if (existingProduct) {
+      // Check if we're trying to add more than what's in stock
+      if (existingProduct.quantity >= product.stock) {
+        alert("Sorry, we don't have more units in stock")
+        return
+      }
+
       setCart(cart.map((item) => (item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item)))
     } else {
       setCart([...cart, { ...product, quantity: 1 }])

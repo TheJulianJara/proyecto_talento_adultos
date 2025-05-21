@@ -9,6 +9,15 @@ export default function Cart() {
   // Calculate total price
   const totalPrice = cart.reduce((total, item) => total + item.price * item.quantity, 0)
 
+  // Function to handle adding to cart with stock check
+  const handleAddToCart = (item) => {
+    if (item.quantity >= item.stock) {
+      alert("Sorry, we don't have more units in stock")
+      return
+    }
+    addToCart(item)
+  }
+
   if (cart.length === 0) {
     return (
       <div className="bg-white rounded-lg shadow-md p-6 text-center">
@@ -39,6 +48,7 @@ export default function Cart() {
               <p className="text-sm text-gray-500">
                 ${item.price.toFixed(2)} x {item.quantity}
               </p>
+              <p className="text-xs text-gray-500">Stock: {item.stock}</p>
             </div>
 
             <div className="flex items-center">
@@ -50,7 +60,11 @@ export default function Cart() {
 
               <span className="mx-2 text-gray-700">{item.quantity}</span>
 
-              <button onClick={() => addToCart(item)} className="text-gray-500 hover:text-green-500 p-1">
+              <button
+                onClick={() => handleAddToCart(item)}
+                className={`text-gray-500 hover:text-green-500 p-1 ${item.quantity >= item.stock ? "opacity-50 cursor-not-allowed" : ""}`}
+                disabled={item.quantity >= item.stock}
+              >
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                   <path
                     fillRule="evenodd"

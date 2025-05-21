@@ -21,7 +21,12 @@ export default function ProductList() {
         }
 
         const data = await response.json()
-        setProducts(data)
+        // Add random stock between 0 and 10 to each product
+        const productsWithStock = data.map((product) => ({
+          ...product,
+          stock: Math.floor(Math.random() * 11), // Random number between 0 and 10
+        }))
+        setProducts(productsWithStock)
         setIsLoading(false)
       } catch (err) {
         setError(err.message)
@@ -75,12 +80,24 @@ export default function ProductList() {
             <div className="flex justify-between items-center mt-4">
               <span className="text-xl font-bold text-gray-900">${product.price.toFixed(2)}</span>
 
-              <button
-                onClick={() => addToCart(product)}
-                className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded transition"
-              >
-                Add to Cart
-              </button>
+              {product.stock > 0 ? (
+                <div className="flex flex-col items-end">
+                  <span className="text-sm text-gray-600 mb-1">Stock: {product.stock}</span>
+                  <button
+                    onClick={() => addToCart(product)}
+                    className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded transition"
+                  >
+                    Add to Cart
+                  </button>
+                </div>
+              ) : (
+                <div className="flex flex-col items-end">
+                  <span className="text-sm text-red-600 mb-1">Out of stock</span>
+                  <button disabled className="bg-gray-300 text-gray-500 px-3 py-1 rounded cursor-not-allowed">
+                    Add to Cart
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </div>
