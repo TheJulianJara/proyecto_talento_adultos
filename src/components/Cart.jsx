@@ -2,6 +2,8 @@
 
 import { useContext } from "react"
 import { CartContext } from "../App"
+import { FaPlus, FaMinus, FaTrash } from "react-icons/fa"
+import { toast } from "react-toastify"
 
 export default function Cart() {
   const { cart, addToCart, removeFromCart, clearCart } = useContext(CartContext)
@@ -12,7 +14,7 @@ export default function Cart() {
   // Function to handle adding to cart with stock check
   const handleAddToCart = (item) => {
     if (item.quantity >= item.stock) {
-      alert("Sorry, we don't have more units in stock")
+      toast.warn("Lo sentimos, no tenemos más unidades en stock")
       return
     }
     addToCart(item)
@@ -21,8 +23,8 @@ export default function Cart() {
   if (cart.length === 0) {
     return (
       <div className="bg-white rounded-lg shadow-md p-6 text-center">
-        <h2 className="text-xl font-semibold mb-4">Your Cart</h2>
-        <p className="text-gray-500">Your cart is empty</p>
+        <h2 className="text-xl font-semibold mb-4">Tu Carrito</h2>
+        <p className="text-gray-500">Tu carrito está vacío</p>
       </div>
     )
   }
@@ -30,48 +32,40 @@ export default function Cart() {
   return (
     <div className="bg-white rounded-lg shadow-md p-6">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-xl font-semibold">Your Cart</h2>
-        <button onClick={clearCart} className="text-red-500 hover:text-red-700 text-sm">
-          Clear Cart
+        <h2 className="text-xl font-semibold">Tu Carrito</h2>
+        <button onClick={clearCart} className="text-red-500 hover:text-red-700 text-sm flex items-center">
+          <FaTrash className="mr-1" /> Vaciar Carrito
         </button>
       </div>
 
       <div className="divide-y divide-gray-200">
         {cart.map((item) => (
           <div key={item.id} className="py-4 flex items-center">
-            <div className="w-16 h-16 overflow-hidden mr-4">
+            <div className="w-16 h-16 overflow-hidden mr-4 flex-shrink-0">
               <img src={item.image || "/placeholder.svg"} alt={item.title} className="w-full h-full object-contain" />
             </div>
 
-            <div className="flex-1">
-              <h3 className="text-sm font-medium text-gray-900 line-clamp-1">{item.title}</h3>
+            <div className="flex-1 min-w-0">
+              <h3 className="text-sm font-medium text-gray-900 truncate">{item.title}</h3>
               <p className="text-sm text-gray-500">
-                ${item.price.toFixed(2)} x {item.quantity}
+                ${item.price} x {item.quantity}
               </p>
               <p className="text-xs text-gray-500">Stock: {item.stock}</p>
             </div>
 
-            <div className="flex items-center">
+            <div className="flex items-center ml-2">
               <button onClick={() => removeFromCart(item.id)} className="text-gray-500 hover:text-red-500 p-1">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M5 10a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1z" clipRule="evenodd" />
-                </svg>
+                <FaMinus size={12} />
               </button>
 
-              <span className="mx-2 text-gray-700">{item.quantity}</span>
+              <span className="mx-2 text-gray-700 w-6 text-center">{item.quantity}</span>
 
               <button
                 onClick={() => handleAddToCart(item)}
                 className={`text-gray-500 hover:text-green-500 p-1 ${item.quantity >= item.stock ? "opacity-50 cursor-not-allowed" : ""}`}
                 disabled={item.quantity >= item.stock}
               >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                  <path
-                    fillRule="evenodd"
-                    d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
-                    clipRule="evenodd"
-                  />
-                </svg>
+                <FaPlus size={12} />
               </button>
             </div>
           </div>
@@ -83,11 +77,11 @@ export default function Cart() {
           <p>Subtotal</p>
           <p>${totalPrice.toFixed(2)}</p>
         </div>
-        <p className="mt-0.5 text-sm text-gray-500">Shipping and taxes calculated at checkout.</p>
+        <p className="mt-0.5 text-sm text-gray-500">Envío e impuestos calculados al finalizar la compra.</p>
 
         <div className="mt-6">
           <button className="w-full bg-blue-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-            Checkout
+            Finalizar Compra
           </button>
         </div>
       </div>

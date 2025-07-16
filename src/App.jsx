@@ -1,6 +1,7 @@
 "use client"
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
-import { useState, createContext } from "react"
+import { useState, createContext, useEffect } from "react"
+import { ToastContainer, toast } from "react-toastify"
 import "./App.css"
 
 // Pages
@@ -25,29 +26,35 @@ function App() {
   // Cart state
   const [cart, setCart] = useState([])
 
-  // Auth state
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  // Auth state with localStorage persistence
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    return JSON.parse(localStorage.getItem("isAuthenticated")) || false
+  })
+
+  useEffect(() => {
+    localStorage.setItem("isAuthenticated", JSON.stringify(isAuthenticated))
+  }, [isAuthenticated])
 
   // Add to cart function
   const addToCart = (product) => {
-    // Check if product has stock
     if (!product.stock || product.stock <= 0) {
-      alert("Sorry, this product is out of stock")
+      toast.error("Lo sentimos, este producto está agotado")
       return
     }
 
     const existingProduct = cart.find((item) => item.id === product.id)
 
     if (existingProduct) {
-      // Check if we're trying to add more than what's in stock
       if (existingProduct.quantity >= product.stock) {
-        alert("Sorry, we don't have more units in stock")
+        toast.warn("Lo sentimos, no tenemos más unidades en stock")
         return
       }
 
       setCart(cart.map((item) => (item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item)))
+      toast.success(`¡Cantidad de ${product.title} actualizada en el carrito!`)
     } else {
       setCart([...cart, { ...product, quantity: 1 }])
+      toast.success(`¡${product.title} agregado al carrito!`)
     }
   }
 
@@ -75,13 +82,14 @@ function App() {
   // Logout function
   const logout = () => {
     setIsAuthenticated(false)
+    toast.info("Has cerrado sesión.")
   }
 
   return (
     <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
       <CartContext.Provider value={{ cart, addToCart, removeFromCart, clearCart }}>
         <Router>
-          <div className="flex flex-col min-h-screen">
+          <div className="flex flex-col min-h-screen bg-gray-50">
             <Header />
             <main className="flex-grow container mx-auto px-4 py-8">
               <Routes>
@@ -97,6 +105,7 @@ function App() {
               </Routes>
             </main>
             <Footer />
+            <ToastContainer position="bottom-right" autoClose={3000} hideProgressBar={false} />
           </div>
         </Router>
       </CartContext.Provider>

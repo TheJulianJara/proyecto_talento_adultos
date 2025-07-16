@@ -36,7 +36,7 @@ export default function Login() {
         navigate(from, { replace: true })
       }, 1000)
     } else {
-      setError('Invalid credentials. Try using "password" as the password.')
+      setError('Credenciales inválidas. Intenta usar "password" como contraseña.')
       setIsLoading(false)
     }
   }
@@ -44,7 +44,7 @@ export default function Login() {
   return (
     <div className="max-w-md mx-auto">
       <div className="bg-white rounded-lg shadow-md p-8">
-        <h1 className="text-2xl font-bold text-center mb-6">Login</h1>
+        <h1 className="text-2xl font-bold text-center mb-6">Iniciar Sesión</h1>
 
         {error && (
           <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
@@ -57,7 +57,7 @@ export default function Login() {
             className="bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded relative mb-4"
             role="alert"
           >
-            <span className="block sm:inline">You need to login to access that page.</span>
+            <span className="block sm:inline">Necesitas iniciar sesión para acceder a esa página.</span>
           </div>
         )}
 
@@ -79,7 +79,7 @@ export default function Login() {
 
           <div className="mb-6">
             <label htmlFor="password" className="block text-gray-700 font-medium mb-2">
-              Password
+              Contraseña
             </label>
             <input
               type="password"
@@ -90,7 +90,7 @@ export default function Login() {
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             />
-            <p className="text-sm text-gray-500 mt-1">Hint: Use "password" for demo purposes</p>
+            <p className="text-sm text-gray-500 mt-1">Pista: Usa "password" para la demostración</p>
           </div>
 
           <button
@@ -98,7 +98,7 @@ export default function Login() {
             disabled={isLoading}
             className={`w-full bg-blue-600 text-white px-4 py-2 rounded-md font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition ${isLoading ? "opacity-70 cursor-not-allowed" : ""}`}
           >
-            {isLoading ? "Logging in..." : "Login"}
+            {isLoading ? "Iniciando sesión..." : "Iniciar Sesión"}
           </button>
         </form>
       </div>
